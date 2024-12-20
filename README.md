@@ -54,6 +54,10 @@ sudo mv HexGL/* /var/www/html
 sudo systemctl start apache2
 ```
 
+**Akses Web Server**
+![image](https://github.com/user-attachments/assets/104bc352-6d19-4cb7-9bb1-523720949e50)
+![image](https://github.com/user-attachments/assets/1fd362ce-6acc-4574-b22d-b0b55a6ab99e)
+
 # Install FTP Server
 
 **Install FTP Server**
