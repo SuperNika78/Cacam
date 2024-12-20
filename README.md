@@ -55,7 +55,7 @@ sudo systemctl start apache2
 ```
 
 **Akses Web Server**
-![image](https://github.com/user-attachments/assets/104bc352-6d19-4cb7-9bb1-523720949e50)
+![image](https://github.com/user-attachments/assets/899cc365-d022-4a5c-9cb2-d220e835ccc5)
 ![image](https://github.com/user-attachments/assets/1fd362ce-6acc-4574-b22d-b0b55a6ab99e)
 
 # FTP Server
