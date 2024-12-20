@@ -7,7 +7,7 @@ Web Games
 4. Fail2Ban (Intrusion Prevention System)
 5. Vsftpd (FTP Server)
 
-# Install SSH
+# SSH
 **Install SSH Server**
 ```
 sudo apt install openssh-server
@@ -23,7 +23,7 @@ sudo systemctl start ssh
 sudo systemctl enable ssh
 ```
 
-# Install Apache Web Server
+# Apache Web Server
 **Install apache**
 ```
 sudo apt install apache2
@@ -58,7 +58,7 @@ sudo systemctl start apache2
 ![image](https://github.com/user-attachments/assets/104bc352-6d19-4cb7-9bb1-523720949e50)
 ![image](https://github.com/user-attachments/assets/1fd362ce-6acc-4574-b22d-b0b55a6ab99e)
 
-# Install FTP Server
+# FTP Server
 
 **Install FTP Server**
 ```
@@ -242,7 +242,7 @@ userlist_deny=NO
 echo "cacam" | sudo tee -a /etc/vsftpd.userlist
 ```
 
-# Install Fail2ban
+# Fail2ban
 Secara default bila user salah memasukkan password ssh dan ftp sebanyak 5 kali, maka akan diblokir selama 10 menit
 **Install Fail2Ban**
 ```
@@ -266,4 +266,102 @@ enabled = true
 **Restat fail2ban**
 ```
 sudo systemctl restart fail2ban
+```
+
+# DNS Server
+**Install BIND9**
+```
+sudo apt install bind9 bind9-utils -y
+
+**Konfigurasi DNS Server**
+sudo cp /etc/bind/db.127 /etc/bind/db.ip
+sudo cp /etc/bind/db.local /etc/bind/db.domain
+```
+
+**Edit file db.domain**
+```
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     gamebalap.id. root.gamebalap.id. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      gamebalap.id.
+@       IN      A       192.168.18.231
+```
+
+**Edit file db.ip**
+```
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     gamebalap.id. root.gamebalap.id. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      gamebalap.id.
+231     IN      PTR     gamebalap.id.
+```
+
+**Edit named.conf.local**
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "gamebalap.id"{
+        type master;
+        file "/etc/bind/db.domain";
+};
+
+zone "18.168.192.in-addr.arpa"{
+        type master;
+        file "/etc/bind/db.ip";
+};
+```
+
+**Selanjutnya, konfigurasi named.conf.option**
+```
+options {
+        directory "/var/cache/bind";
+
+        // If there is a firewall between you and nameservers you want
+        // to talk to, you may need to fix the firewall to allow multiple
+        // ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+        // If your ISP provided one or more IP addresses for stable
+        // nameservers, you probably want to use them as forwarders.
+        // Uncomment the following block, and insert the addresses replacing
+        // the all-0's placeholder.
+
+        forwarders {
+        8.8.8.8;
+        };
+
+        //========================================================================
+        // If BIND logs error messages about the root key being expired,
+        // you will need to update your keys.  See https://www.isc.org/bind-keys
+        //========================================================================
+        dnssec-validation no;
+
+        listen-on-v6 { any; };
+};
+```
+
+**Selanjutnya restart bind9**
+```
+sudo systemctl restart bind9.service
 ```
