@@ -18,16 +18,9 @@ sudo apt install openssh-server
 sudo systemctl start ssh
 ```
 
-# Install Fail2ban
-Secara default bila user salah memasukkan password ssh sebanyak 5 kali, maka akan diblokir selama 10 menit
-**Install Fail2Ban**
+**Enable SSH**
 ```
-sudo apt install fail2ban
-```
-
-**Enable fail2ban**
-```
-sudo systemctl enable fail2ban
+sudo systemctl enable ssh
 ```
 
 # Install Apache Web Server
@@ -243,4 +236,30 @@ userlist_deny=NO
 **Tambahkan User FTP**
 ```
 echo "cacam" | sudo tee -a /etc/vsftpd.userlist
+```
+
+# Install Fail2ban
+Secara default bila user salah memasukkan password ssh dan ftp sebanyak 5 kali, maka akan diblokir selama 10 menit
+**Install Fail2Ban**
+```
+sudo apt install fail2ban
+```
+
+**Enable fail2ban**
+```
+sudo systemctl enable fail2ban
+```
+
+**Aktifkan fail2ban untuk vsftpd**
+```
+sudo nano /etc/fail2ban/jail.conf
+
+# Pergi ke line 554 atau cari kata **vsftpd** dengan tombol ctrl+w
+# Tambahkan baris berikut di atas **port**
+enabled = true
+```
+
+**Restat fail2ban**
+```
+sudo systemctl restart fail2ban
 ```
