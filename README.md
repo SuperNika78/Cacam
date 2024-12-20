@@ -1,4 +1,4 @@
-Web Games
+Web Game
 
 # Server Spesification
 1. Apache2 (Web Server)
